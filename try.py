@@ -33,7 +33,7 @@ for i in range(1, 6):
 imagens_treinamento = np.array(imagens_treinamento).reshape(len(imagens_treinamento), -1)
 
 # Carregar a imagem para classificação
-imagem_teste = cv2.imread('imagens/negativas/nao_sinal_1.jpg', 0)  # Substitua pelo caminho correto da imagem de teste
+imagem_teste = cv2.imread('imagens/trois.jpg', 0)  # Substitua pelo caminho correto da imagem de teste
 imagem_teste_redimensionada = cv2.resize(imagem_teste, (300, 300))
 
 # Converter a imagem de teste em um formato adequado para o classificador SVM
@@ -43,8 +43,12 @@ imagem_teste = np.array(imagem_teste_redimensionada).reshape(1, -1)
 classificador = svm.SVC(kernel='linear')
 classificador.fit(imagens_treinamento, rotulos_treinamento)
 
+# Louco
+X_treinamento, X_teste, y_treinamento, y_teste = train_test_split(imagens_treinamento, rotulos_treinamento, test_size=0.1, random_state=42)
+rotulo_teste = y_teste[0]
+
 # Realizar a previsão na imagem de teste
-previsao = classificador.predict(imagem_teste)
+previsao = classificador.predict(X_teste)
 
 # Verificar se a imagem é um símbolo correto ou não
 if previsao == 1:
