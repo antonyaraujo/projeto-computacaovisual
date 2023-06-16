@@ -191,26 +191,47 @@ def identificar_numero(mensagem, operacao):
         if k == 27:
             break
 
-identificar_numero("Informe a operacao, seu corno", "")
-if(len(identificados)>0):    
-        print("Identificou corretamente: " + str(ultimo))
-        opcao = mode(identificados)
-        if(opcao == 1): # SOMA
-            identificados = []
-            operacao = "a + b = c"
-            identificar_numero("Informe o operando 1", operacao)
-            if(len(identificados)>0):                
-                    op_1 =  mode(identificados)
-                    print("Operando 1: " + str(op_1))
-                    identificados = []
-                    operacao = str(op_1) + "+ b = c"
-                    identificar_numero("Informe o operando 2", operacao)
-                    if(len(identificados)>0):
-                            op_2 =  mode(identificados)
-                            operacao = str(op_1) + " + " + str(op_2) + " = " + str(op_1+op_2)
-                            identificar_numero("Resultado", operacao)
-                            print("Operando 2: " + str(op_2))
-                            print(str(op_1) + " + " + str(op_2) + " = " + str(op_1+op_2))       
+expressao = ""
+identificar_numero("Informe o operando 1", expressao)
+if(len(identificados) > 0):
+    op_1 =  mode(identificados)
+    print("Operando 1: " + str(op_1))
+    identificados = []
+    expressao = str(op_1)
+    identificar_numero("Informe a operacao", expressao)
+    if(len(identificados)>0):
+        operacao = mode(identificados)
+        if(operacao == 1):
+            expressao += " + "
+        elif(operacao == 2):
+                expressao += " - "
+        elif(operacao == 3):
+            expressao += " * "
+        elif(operacao == 4):
+            expressao += " / "
+        identificados = []
+        identificar_numero("Informe o operando 2", expressao)
+        if(len(identificados)>0):
+            op_2 =  mode(identificados)
+            print("Operando 2: " + str(op_2))
+            resultado = 0
+            if(operacao == 1):
+                resultado = op_1 + op_2
+            elif(operacao == 2):
+                resultado = op_1 - op_2
+            elif(operacao == 3):
+                resultado = op_1 * op_2
+            elif(operacao == 4):
+                resultado = op_1 / op_2
+            expressao = expressao + str(op_2) + " = " + str(resultado)
+            identificar_numero("Resultado", expressao)            
+            print(expressao)
+        else:                         
+            print("Nenhum número identificado")
+else:
+    print("Nenhum número identificado")
+
+
 
 cv2.destroyAllWindows()
 cap.release() 
