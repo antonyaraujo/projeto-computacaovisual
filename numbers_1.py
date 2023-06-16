@@ -18,7 +18,7 @@ identificados = []
 
 # Ler opção 
 retorno = 0
-def identificar_numero(mensagem):
+def identificar_numero(mensagem, operacao):
     global ultimo  # Indica que a variável `ultimo` é global
 
     tempo_leitura = datetime.timedelta(seconds=10)
@@ -34,13 +34,14 @@ def identificar_numero(mensagem):
             ret, frame = cap.read()
             frame=cv2.flip(frame,1)
             cv2.putText(frame, mensagem,(0,50), font, 1, (255,0,0), 3, cv2.LINE_AA)
+            cv2.putText(frame, operacao,(0,150), font, 1, (255,0,0), 3, cv2.LINE_AA)
             kernel = np.ones((3,3),np.uint8)
             
             #define region of interest
             roi=frame[100:300, 100:300]
             
             
-            cv2.rectangle(frame,(100,100),(300,300),(0,255,0),0)    
+            cv2.rectangle(frame,(100,100),(300,300),(0,255,0),0)
             hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
             
             
@@ -127,7 +128,7 @@ def identificar_numero(mensagem):
             #print corresponding gestures which are in their ranges
             if l==1:
                 if areacnt<2000:
-                    cv2.putText(frame,'Put hand in the box',(0,50), font, 1, (255,0,0), 3, cv2.LINE_AA)
+                    cv2.putText(frame,'Coloque a mao na caixa',(0,300), font, 1, (255,0,0), 3, cv2.LINE_AA)
                 else:
                     # if arearatio<10:
                     #     cv2.putText(frame,'fist vertical',(0,50), font, 2, (255,0,0), 3, cv2.LINE_AA)
@@ -167,6 +168,11 @@ def identificar_numero(mensagem):
                 cv2.putText(frame,'5',(0,100), font, 1, (255,0,0), 3, cv2.LINE_AA)
                 ultimo = 5
                 identificados.append(5)
+            
+            elif l==6:            
+                cv2.putText(frame,'6',(0,100), font, 1, (255,0,0), 3, cv2.LINE_AA)
+                ultimo = 6
+                identificados.append(6)
                 
             # elif l==6:
             #     cv2.putText(frame,'reposition',(0,50), font, 2, (255,0,0), 3, cv2.LINE_AA)
@@ -185,20 +191,24 @@ def identificar_numero(mensagem):
         if k == 27:
             break
 
-identificar_numero("Informe a operacao, seu corno")
+identificar_numero("Informe a operacao, seu corno", "")
 if(len(identificados)>0):    
         print("Identificou corretamente: " + str(ultimo))
         opcao = mode(identificados)
         if(opcao == 1): # SOMA
             identificados = []
-            identificar_numero("Informe o operando 1")
+            operacao = "a + b = c"
+            identificar_numero("Informe o operando 1", operacao)
             if(len(identificados)>0):                
                     op_1 =  mode(identificados)
                     print("Operando 1: " + str(op_1))
                     identificados = []
-                    identificar_numero("Informe o operando 2")
+                    operacao = str(op_1) + "+ b = c"
+                    identificar_numero("Informe o operando 2", operacao)
                     if(len(identificados)>0):
                             op_2 =  mode(identificados)
+                            operacao = str(op_1) + " + " + str(op_2) + " = " + str(op_1+op_2)
+                            identificar_numero("Resultado", operacao)
                             print("Operando 2: " + str(op_2))
                             print(str(op_1) + " + " + str(op_2) + " = " + str(op_1+op_2))       
 
